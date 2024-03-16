@@ -1,18 +1,22 @@
 # Efficient and Fair Line Construction
 
-**Author:** DEVTech
+**Author:** Team DEVTech
 
 ## Problem Statement
 
 Consider a set of \( n \) houses with coordinates given by latitude (\( x \)) and longitude (\( y \)), defined as a set \( P = \{p_1, p_2, \dots, p_n\} \). The task is to construct a gas pipeline in a straight line that serves all of them, where a straight line \( l = \{a, b\} \) is defined by a direction vector \( a \) of unit norm and a point \( b \) on the line.
 
 **Distance Definition:** The distance from a point \( p \) to a line \( l = \{a, b\} \) is given by:
-\[ \text{dist}(p, l) := \left\| (I - aa^T) \cdot (p - b) \right\|^2 \]
+\[
+\text{dist}(p, l) := \left\| (I - aa^T) \cdot (p - b) \right\|^2
+\]
 
 ## Objective 1: Efficient Line
 
 A line is efficient if it minimizes the following cost:
-\[ \sum_{i=1}^{n} \|\text{dist}(p_i, l)\| \]
+\[
+\sum_{i=1}^{n} \|\text{dist}(p_i, l)\|
+\]
 
 ### Trivial Idea:
 Expand the \( L_2 \) Norm squared term, take gradient with respect to the parameters \( a \) and \( b \), solve the equations keeping the constraint on \( a \) being a unit norm by applying Lagrange Operator.
@@ -91,7 +95,9 @@ Through careful consideration of optimization parameters and algorithm selection
 
 For a set of \( k \) lines \( L = \{l_1, \ldots, l_k\} \), the set is efficient if it minimizes:
 
-\[ \sum_{i=1}^{n} \min_{l \in L} \|\text{dist}(p_i, l)\| \]
+\[
+\sum_{i=1}^{n} \min_{l \in L} \|\text{dist}(p_i, l)\|
+\]
 
 Design an algorithm that computes \( k \) efficient lines or a set of lines which is almost efficient, meaning the above cost is a local minimum.
 
@@ -99,4 +105,30 @@ Design an algorithm that computes \( k \) efficient lines or a set of lines whic
 
 1. **Optimization Convergence:** The optimization process did not converge effectively initially, leading to suboptimal results.
 2. **Learning Rate Selection:** Choosing an appropriate learning rate for the optimization algorithm posed a challenge as it directly impacts convergence behavior.
-3. **
+3. **Parameter Initialization:** Initializing the direction vector and point on the line required careful consideration for effective optimization.
+
+### Key Decisions Made
+
+1. **Use of PyTorch:** Utilized PyTorch for efficient gradient calculation.
+2. **Learning Rate Adjustment:** Experimented with different learning rates to balance convergence speed and stability.
+3. **Initialization Strategy:** Initialized the point on the line at the centroid of the house coordinates for a better starting point.
+4. **Optimization Algorithm Selection:** Switched to using the Adam optimizer for improved convergence behavior.
+
+### Solutions Implemented
+
+1. **Learning Rate Adjustment:** Set the learning rate to 0.1 for more stable convergence.
+2. **Parameter Initialization:** Initialized the point on the line at the centroid of the house coordinates for a better starting point.
+3. **Optimization Algorithm Switch:** Utilized the Adam optimizer for improved convergence behavior.
+
+### Output
+
+- **Optimal lines:**
+    - **Line 1**
+        - Direction vector \( a \): [\( 2.73331076 \times 10^{140} \), \( -1.65294755 \times 10^{140} \)]
+        - Point \( b \) on the line: [\( -6.37186689 \times 10^{140} \), \( 2.55546158 \times 10^{140} \)]
+        - Minimum cost: 19724.781917739136
+
+### Challenges Faced
+
+- Iterative normalization of vector \( a \).
+- Changing the learning rate to minimize the cost.
